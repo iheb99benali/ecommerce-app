@@ -1,10 +1,10 @@
-import React from "react";
 import AdminLayout from "../components/AdminLayout";
+import AdminProductList from "../components/AdminProductList";
 
 const AdminProducts = () => {
   return (
     <AdminLayout>
-      <div className="admin-products">Products</div>
+      <AdminProductList />
     </AdminLayout>
   );
 };

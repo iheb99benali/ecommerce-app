@@ -1,4 +1,3 @@
-import React from "react";
 import ProductMenu from "../components/ProductMenu";
 
 const Products = () => {

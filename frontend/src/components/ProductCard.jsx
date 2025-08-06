@@ -1,4 +1,3 @@
-import React from "react";
 import productImg from "../assets/images/product_01.jpg";
 
 const ProductCard = () => {

@@ -1,0 +1,24 @@
+import React from "react";
+import ProductMenu from "../components/ProductMenu";
+
+const Products = () => {
+  return (
+    <>
+      <div class="page-heading products-heading header-text">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="text-content">
+                <h4>new arrivals</h4>
+                <h2>sixteen products</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ProductMenu />
+    </>
+  );
+};
+
+export default Products;

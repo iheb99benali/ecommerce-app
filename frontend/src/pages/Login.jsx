@@ -1,14 +1,58 @@
-import { Link, NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
 
 const Login = () => {
+  const [loginData, setLoginData] = useState({
+    email: "",
+    password: "",
+  });
+  const navigate = useNavigate();
+
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setLoginData((prev) => ({ ...prev, [name]: value }));
+  }
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      console.log("Login Data:", loginData);
+      const user = await axios.post(
+        "http://localhost:5000/api/users/login",
+        loginData
+      );
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+      if (error.status === 404 || error.status === 401) {
+        alert(error.response?.data.error);
+      } else {
+        alert(error.response?.data.error);
+      }
+    }
+  };
+
   return (
     <div className="auth-container">
       <div className="auth-form">
         <h2>Welcome Back</h2>
         <p>Login to your account</p>
-        <form>
-          <input type="email" placeholder="Email" required />
-          <input type="password" placeholder="Password" required />
+        <form onSubmit={handleLogin}>
+          <input
+            type="email"
+            name="email"
+            onChange={handleChange}
+            placeholder="Email"
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            onChange={handleChange}
+            placeholder="Password"
+            required
+          />
           <button type="submit">Login</button>
           <p className="switch-link">
             Don’t have an account?

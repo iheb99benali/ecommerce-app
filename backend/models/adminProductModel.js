@@ -22,4 +22,11 @@ const createProduct = async (prodData) => {
   );
 };
 
-module.exports = { createProduct, getAllProducts };
+const updateProduct = async () => {
+  const [rows] = await db.query(
+    "SELECT * FROM products ORDER BY created_at DESC LIMIT 3"
+  );
+  return rows;
+};
+
+module.exports = { updateProduct, createProduct, getAllProducts };

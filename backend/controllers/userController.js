@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const getUsers = async (req, res) => {
   try {
@@ -38,11 +39,37 @@ const loginUser = async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findByEmail(email);
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
+    if (!user) {
+      throw { status: 404, message: "User not found" };
+    }
 
-    console.log("login successful!!");
-  } catch (err) {}
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) throw { status: 401, message: "Invalid credentials" };
+
+    const token = jwt.sign(
+      {
+        id: user.id,
+        name: user.name,
+        surname: user.surname,
+        email: user.email,
+        is_admin: user.is_admin,
+      },
+      process.env.ACCESS_TOKEN_SECRET
+    );
+
+    res.status(200).json({
+      token,
+      user: { email: user.email, is_admin: user.is_admin },
+    });
+  } catch (err) {
+    if (err.status === 404) {
+      return res.status(404).json({ error: err.message });
+    } else if (err.status === 401) {
+      return res.status(401).json({ error: err.message });
+    } else {
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  }
 };
 
 module.exports = { addUser, getUsers, loginUser };

@@ -31,6 +31,19 @@ const AdminProductList = () => {
     }
   }
 
+  async function handleUpdateProduct(Product, e) {
+    // setProductList((prev) => [...prev, Product]);
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/admin-products/update",
+        Product
+      );
+      console.log("product updated: ", res.data);
+    } catch (err) {
+      console.log(err.response?.data.error);
+    }
+  }
+
   const [showModal, setShowModal] = useState(false);
   const [productList, setProductList] = useState([]);
 
@@ -47,8 +60,12 @@ const AdminProductList = () => {
           onSave={handleAddProduct}
         />
       )}
-      {productList.map((prod, i) => (
-        <AdminProductCard key={i} product={prod} />
+      {productList.map((product, i) => (
+        <AdminProductCard
+          key={i}
+          product={product}
+          onChange={handleUpdateProduct}
+        />
       ))}
     </div>
   );

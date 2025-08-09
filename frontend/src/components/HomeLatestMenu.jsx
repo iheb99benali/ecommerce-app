@@ -1,11 +1,14 @@
-import ProductCard from "./ProductCard";
 import { useEffect, useState } from "react";
+import ProductCard from "./ProductCard";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
-const ProductMenu = () => {
+const HomeLatestMenu = () => {
   useEffect(() => {
     const getProducts = async () => {
-      const products = await axios.get("http://localhost:5000/api/products");
+      const products = await axios.get(
+        "http://localhost:5000/api/products/latest"
+      );
       setProductList(products.data);
     };
     getProducts();
@@ -18,7 +21,10 @@ const ProductMenu = () => {
         <div className="row">
           <div className="col-md-12">
             <div className="section-heading">
-              <h2>Add search bar here</h2>
+              <h2>Latest Products</h2>
+              <Link to="products">
+                view all products <i className="fa fa-angle-right"></i>
+              </Link>
             </div>
           </div>
           {productList.map((product) => (
@@ -30,4 +36,4 @@ const ProductMenu = () => {
   );
 };
 
-export default ProductMenu;
+export default HomeLatestMenu;

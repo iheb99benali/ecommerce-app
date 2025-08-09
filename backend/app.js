@@ -7,10 +7,11 @@ app.use(express.json());
 
 const userRoutes = require("./routes/userRoutes");
 const adminProductRoutes = require("./routes/adminProductRoutes");
+const productRoutes = require("./routes/productRoutes");
 
-app.use("/api/users", userRoutes); // API path
-app.use("/api/users/login", userRoutes); // API path
+app.use("/api/users", userRoutes);
+app.use("/api/products", productRoutes);
 
-app.use("/api/admin-products", adminProductRoutes); // API path
+app.use("/api/admin-products", adminProductRoutes);
 
 module.exports = app;

@@ -30,6 +30,7 @@ const AdminProductCard = ({ product, onUpdate, onDelete }) => {
   }
 
   function handleCategoryChange(option) {
+    console.log(option);
     setProduct((prev) => ({
       ...prev,
       category: option,
@@ -99,6 +100,10 @@ const AdminProductCard = ({ product, onUpdate, onDelete }) => {
     }
   }
 
+  function handleDiscard() {
+    setProduct(product);
+  }
+
   function handleDeleteProduct() {
     if (window.confirm("Are you sure you want to delete this product?")) {
       onDelete(product.id);
@@ -128,7 +133,7 @@ const AdminProductCard = ({ product, onUpdate, onDelete }) => {
           <div className="product-images">
             <img className="main-image" src={activeImage} alt="Product" />
             <div className="thumbnail-grid">
-              {product_.image_urls.slice(1).map((img, i) => (
+              {product_.image_urls.slice(0).map((img, i) => (
                 <div
                   key={i}
                   className="thumbnail-wrapper"
@@ -215,7 +220,7 @@ const AdminProductCard = ({ product, onUpdate, onDelete }) => {
                 <CustomSelect
                   options={categoriesList}
                   onChange={handleCategoryChange}
-                  placeholder="Select category"
+                  placeholder={`${product_.category}`}
                 />
               </div>
             </div>
@@ -262,6 +267,20 @@ const AdminProductCard = ({ product, onUpdate, onDelete }) => {
                 <button type="button" onClick={handleDeleteProduct}>
                   Delete Product
                 </button>
+
+                <button
+                  type="button"
+                  disabled={product === product_ ? true : false}
+                  style={
+                    product === product_
+                      ? { background: "grey", cursor: "default" }
+                      : { background: "blue" }
+                  }
+                  onClick={handleDiscard}
+                >
+                  Discard Changes
+                </button>
+
                 <button type="submit">Apply Edits</button>
               </div>
             </div>

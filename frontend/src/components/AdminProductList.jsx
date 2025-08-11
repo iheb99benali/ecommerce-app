@@ -61,7 +61,7 @@ const AdminProductList = () => {
   }
 
   async function handleDeleteProduct(id) {
-    console.log("Deleting product with ID:", id);
+    console.log("Deleting product with ID:", typeof id);
     try {
       const res = await axios.delete(
         `http://localhost:5000/api/admin/products/Delete/${id}`,
@@ -93,7 +93,7 @@ const AdminProductList = () => {
       {/* //TODO: add searchbar, filter and sort */}
       {productList.map((product, i) => (
         <AdminProductCard
-          key={i}
+          key={product.id}
           product={product}
           onDelete={handleDeleteProduct}
           onUpdate={handleUpdateProduct}

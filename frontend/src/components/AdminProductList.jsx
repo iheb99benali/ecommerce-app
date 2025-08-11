@@ -3,12 +3,20 @@ import AdminProductCard from "./AdminProductCard";
 import NewProductModal from "./NewProductModal";
 import axios from "axios";
 
+const token = localStorage.getItem("token"); //TODO: handle token with context or redux
+
 const AdminProductList = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [productList, setProductList] = useState([]);
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/admin-products"
+          "http://localhost:5000/api/admin/products",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
         );
         setProductList(response.data);
       } catch (error) {
@@ -19,13 +27,17 @@ const AdminProductList = () => {
   }, []);
 
   async function handleAddProduct(newProduct, e) {
-    setProductList((prev) => [...prev, newProduct]);
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/admin-products",
-        newProduct
+        "http://localhost:5000/api/admin/products/create",
+        newProduct,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
-      console.log("product created: ", res.data);
+      setProductList((prev) => [...prev, { ...newProduct, id: res.data.id }]);
+
+      console.log("product created: ", res.data.prodData);
     } catch (err) {
       console.log(err.response?.data.error);
     }
@@ -33,20 +45,37 @@ const AdminProductList = () => {
 
   async function handleUpdateProduct(Product, e) {
     // setProductList((prev) => [...prev, Product]);
+    console.log("Updating product:", Product);
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/admin-products/update",
-        Product
+      const res = await axios.put(
+        "http://localhost:5000/api/admin/products/update",
+        Product,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
-      console.log("product updated: ", res.data);
+      console.log("Product updated:", res.data);
     } catch (err) {
       console.log(err.response?.data.error);
     }
   }
 
-  const [showModal, setShowModal] = useState(false);
-  const [productList, setProductList] = useState([]);
-
+  async function handleDeleteProduct(id) {
+    console.log("Deleting product with ID:", id);
+    try {
+      const res = await axios.delete(
+        `http://localhost:5000/api/admin/products/Delete/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setProductList((prev) => prev.filter((product) => product.id !== id));
+      console.log("Product deleted:", res.data);
+    } catch (err) {
+      console.error("Error deleting product:", err);
+      console.log(err.response?.data.error);
+    }
+  }
   return (
     <div className="product-list">
       <div style={{ marginBottom: "20px" }}>
@@ -60,11 +89,14 @@ const AdminProductList = () => {
           onSave={handleAddProduct}
         />
       )}
+
+      {/* //TODO: add searchbar, filter and sort */}
       {productList.map((product, i) => (
         <AdminProductCard
           key={i}
           product={product}
-          onChange={handleUpdateProduct}
+          onDelete={handleDeleteProduct}
+          onUpdate={handleUpdateProduct}
         />
       ))}
     </div>
@@ -72,39 +104,3 @@ const AdminProductList = () => {
 };
 
 export default AdminProductList;
-
-// [
-//   {
-//     name: "Test Product 1",
-//     description: "This is a test product.",
-//     stock: 10,
-//     price: 29.99,
-//     images: [
-//       "https://placehold.co/600x400",
-//       "https://placehold.co/600x500?text=Hello+World",
-//       "https://placehold.co/600x400/000000/FFF",
-//       "https://placehold.co/600x400?font=roboto",
-//       "https://placehold.co/600x400",
-//       "https://placehold.co/600x300?text=hi",
-//       "https://placehold.co/600x400/000000/000",
-//       "https://placehold.co/600x400?font=oswald",
-//     ],
-//   },
-//   {
-//     name: "Test Product 2",
-//     description: "Another product.",
-//     price: 14.49,
-//     stock: 5,
-//     category: "shoes",
-//     images: [
-//       "https://placehold.co/600x400",
-//       "https://placehold.co/600x500?text=Hello+World",
-//       "https://placehold.co/600x400/000000/FFF",
-//       "https://placehold.co/600x400?font=roboto",
-//       "https://placehold.co/600x400",
-//       "https://placehold.co/600x300?text=hi",
-//       "https://placehold.co/600x400/000000/000",
-//       "https://placehold.co/600x400?font=oswald",
-//     ],
-//   },
-// ];

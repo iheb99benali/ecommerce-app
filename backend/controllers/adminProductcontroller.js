@@ -11,10 +11,10 @@ const addProduct = async (req, res) => {
       price,
       stock,
       category,
-      image_urls,
-      is_active: false,
+      image_urls: [...new Set(image_urls)],
+      is_active: true,
     });
-    res.status(201).json({ message: "product created", prodData });
+    res.status(201).json({ message: "product created", id: prodData.insertId });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -22,7 +22,12 @@ const addProduct = async (req, res) => {
 
 const getProducts = async (req, res) => {
   try {
-    const products = await adminProduct.getAllProducts();
+    let products = await adminProduct.getAllProducts();
+    products = products.map((prod) => ({
+      ...prod,
+      price: parseFloat(prod.price),
+      is_active: prod.is_active === 1 ? true : false,
+    }));
     res.json(products);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -31,11 +36,23 @@ const getProducts = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   try {
-    const products = await product.updateProduct();
-    res.json(products);
+    const updatedProduct = await adminProduct.updateProductById(req.body);
+
+    res.json(updatedProduct);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+const deleteProduct = async (req, res) => {
+  try {
+    console.log("Deleting product with IDc:", req.params.id);
+    const deletedProduct = await adminProduct.deleteProductById(req.params.id);
+    res
+      .status(201)
+      .json({ message: "product deleted", id: deletedProduct.insertId });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-module.exports = { updateProduct, addProduct, getProducts };
+module.exports = { getProducts, addProduct, updateProduct, deleteProduct };

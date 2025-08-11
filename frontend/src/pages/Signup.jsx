@@ -1,8 +1,10 @@
 import { React, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
+  const navigate = useNavigate();
+
   const [error, setErrorMessage] = useState();
   const [userData, setUserData] = useState({
     name: "",
@@ -24,6 +26,15 @@ const Signup = () => {
     e.preventDefault();
     try {
       const res = await axios.post("http://localhost:5000/api/users", userData);
+      const user = await axios.post("http://localhost:5000/api/users/login", {
+        email: userData.email,
+        password: userData.password,
+      });
+      console.log("data", user.data);
+
+      localStorage.setItem("token", user.data.token);
+      localStorage.setItem("user", JSON.stringify(user.data.user));
+      navigate("/");
       console.log("user created: ", res.data);
     } catch (err) {
       if (err.response?.data.error === "EMAIL_IN_USE") {

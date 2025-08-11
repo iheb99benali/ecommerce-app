@@ -21,8 +21,8 @@ const ProductMenu = () => {
               <h2>Add search bar here</h2>
             </div>
           </div>
-          {productList.map((product) => (
-            <ProductCard product={product} />
+          {productList.map((product, i) => (
+            <ProductCard key={i} product={product} />
           ))}
         </div>
       </div>

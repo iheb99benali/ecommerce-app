@@ -6,12 +6,12 @@ app.use(cors());
 app.use(express.json());
 
 const userRoutes = require("./routes/userRoutes");
-const adminProductRoutes = require("./routes/adminProductRoutes");
 const productRoutes = require("./routes/productRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 
-app.use("/api/admin-products", adminProductRoutes);
+app.use("/api/admin", adminRoutes);
 
 module.exports = app;

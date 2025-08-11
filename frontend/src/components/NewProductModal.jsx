@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import { categoriesList } from "../assets/constant/categories";
 const NewProductModal = ({ onClose, onSave }) => {
   const [product, setProduct] = useState({
     name: "",
@@ -8,19 +8,6 @@ const NewProductModal = ({ onClose, onSave }) => {
     price: 0.0,
     image_urls: [],
   });
-
-  const categoriesList = [
-    "Shoes",
-    "Shirt",
-    "T-shirt",
-    "Pants",
-    "Jeans",
-    "Shorts",
-    "Accessories",
-    "Hoodies",
-    "Jackets",
-    "Sweatshirts",
-  ];
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -36,6 +23,7 @@ const NewProductModal = ({ onClose, onSave }) => {
     setProduct((prev) => ({ ...prev, image_urls: urls }));
   }
 
+  // TODO: - Fix categories force selection
   function handleSubmit(e) {
     e.preventDefault();
     if (

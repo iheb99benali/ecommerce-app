@@ -18,6 +18,8 @@ import "./assets/css/flex-slider.css";
 import "./assets/css/owl.css";
 import "./assets/css/templatemo-sixteen.css";
 import "./assets/css/fontawesome.css";
+import "./assets/css/custom-select.css";
+import "./assets/css/admin-card.css";
 
 import "jquery";
 import "popper.js/dist/umd/popper.min.js";

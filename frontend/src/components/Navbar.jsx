@@ -1,6 +1,19 @@
 import { NavLink } from "react-router-dom";
 
 const Navbar = () => {
+  const token = localStorage.getItem("token"); //TODO: handle token with context or redux
+  const user = JSON.parse(localStorage.getItem("user")); //TODO: handle token with context or redux
+
+  if (token && user) {
+    console.log("token: ", token);
+    console.log("user: ", user);
+  }
+
+  function handleLogout() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+  }
+
   return (
     <header className="">
       <nav className="navbar navbar-expand-lg">
@@ -23,12 +36,14 @@ const Navbar = () => {
           </button>
           <div className="collapse navbar-collapse" id="navbarResponsive">
             <ul className="navbar-nav ml-auto">
-              <li className="nav-item active">
-                <NavLink to="/admin" className="nav-link">
-                  Admin
-                </NavLink>
-              </li>
-              <li className="nav-item active">
+              {token && user.is_admin && (
+                <li className="nav-item">
+                  <NavLink to="/admin" className="nav-link">
+                    Admin
+                  </NavLink>
+                </li>
+              )}
+              <li className="nav-item ">
                 <NavLink to="/" className="nav-link">
                   Home
                   <span className="sr-only">(current)</span>
@@ -49,10 +64,28 @@ const Navbar = () => {
                   Contact Us
                 </NavLink>
               </li>
-              <li>
-                <NavLink to="/login" className="nav-link">
-                  Login
-                </NavLink>
+              <li className="nav-item">
+                {token && user.is_admin ? (
+                  <NavLink
+                    to="/logout"
+                    onClick={handleLogout}
+                    className="nav-link"
+                  >
+                    logout
+                  </NavLink>
+                ) : (
+                  <NavLink to="/login" className="nav-link">
+                    Login
+                  </NavLink>
+                )}
+              </li>
+              <li className="nav-item">
+                {token && (
+                  <NavLink to="/profile" className="nav-link disabled">
+                    <span style={{ color: "#f33f3f" }}>Welcome </span>
+                    {user.email.split("@")[0]}
+                  </NavLink>
+                )}
               </li>
             </ul>
           </div>

@@ -1,11 +1,15 @@
-import { useState } from "react";
-
-const AdminProductCard = ({ product, onChange }) => {
-  const categoriesList = ["list"];
+import { useState, useRef } from "react";
+import { categoriesList } from "../assets/constant/categories";
+import CustomSelect from "./CustomSelect";
+const AdminProductCard = ({ product, onUpdate, onDelete }) => {
   const [product_, setProduct] = useState(product);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [collapsed, setCollapsed] = useState(false);
+  const [imageUrls, setImageUrls] = useState(product.image_urls);
   const [activeImage, setActiveImage] = useState(product.image_urls[0]);
+
+  const imageUrlsRef = useRef(null);
+
   function toggleCollapse() {
     setCollapsed((prev) => !prev);
   }
@@ -25,18 +29,59 @@ const AdminProductCard = ({ product, onChange }) => {
     }));
   }
 
-  function handleAddImageUrls(e) {
-    if (e.key === "Enter") {
-      const urls = e.target.value
-        .split(/[\n,]+/)
-        .map((url) => url.trim())
-        .filter(Boolean);
+  function handleCategoryChange(option) {
+    setProduct((prev) => ({
+      ...prev,
+      category: option,
+    }));
+  }
 
-      setProduct((prev) => ({
-        ...prev,
-        image_urls: urls.length > 0 && [...prev.image_urls, ...urls],
-      }));
-      e.target.value = "";
+  function handleAddImageUrls(e) {
+    const urlRegex = /^https?:\/\/[^\s/$.?#].[^\s]*$/i; // allow only http/https
+    const value = imageUrlsRef.current.value;
+
+    const urls = value
+      .split(/[\n,]+/)
+      .map((url) => url.trim())
+      .filter((url) => urlRegex.test(url));
+
+    if (!urls.length) {
+      alert("No valid image URLs found! Please enter http/https links.");
+      return;
+    }
+    setImageUrls((prev) => [...prev, ...urls]);
+    setProduct((prev) => ({
+      ...prev,
+      image_urls: [...prev.image_urls, ...urls],
+    }));
+    imageUrlsRef.current.value = "";
+  }
+
+  function handleDeleteImage(urlToDelete) {
+    if (imageUrls.length <= 1) {
+      alert("Cannot delete the last remaining image.");
+      return;
+    }
+
+    // Remove the url from imageUrls and product_.image_urls
+    setImageUrls((prev) => prev.filter((url) => url !== urlToDelete));
+    setProduct((prev) => ({
+      ...prev,
+      image_urls: prev.image_urls.filter((url) => url !== urlToDelete),
+    }));
+
+    // If the deleted image is currently active, switch to another image
+    if (activeImage === urlToDelete) {
+      const remainingImages = imageUrls.filter((url) => url !== urlToDelete);
+      setActiveImage(remainingImages[0] || "");
+    }
+
+    // Append the deleted URL to the textarea (preserving any existing content)
+    if (imageUrlsRef.current) {
+      const currentValue = imageUrlsRef.current.value.trim();
+      imageUrlsRef.current.value = currentValue
+        ? currentValue + "\n" + urlToDelete
+        : urlToDelete;
     }
   }
 
@@ -48,9 +93,15 @@ const AdminProductCard = ({ product, onChange }) => {
       product.stock >= 0 &&
       product.price > 0
     ) {
-      onChange(product);
+      onUpdate(product_);
     } else {
       alert("Please fill in all fields correctly.");
+    }
+  }
+
+  function handleDeleteProduct() {
+    if (window.confirm("Are you sure you want to delete this product?")) {
+      onDelete(product.id);
     }
   }
 
@@ -68,6 +119,7 @@ const AdminProductCard = ({ product, onChange }) => {
               <h3>{product_.name}</h3>
               <p>{product_.description}</p>
             </div>
+
             <button className="collapse-toggle">{!collapsed && "⬇"}</button>
           </div>
         </div>
@@ -76,14 +128,14 @@ const AdminProductCard = ({ product, onChange }) => {
           <div className="product-images">
             <img className="main-image" src={activeImage} alt="Product" />
             <div className="thumbnail-grid">
-              {product.image_urls.slice(1).map((img, i) => (
+              {product_.image_urls.slice(1).map((img, i) => (
                 <div
+                  key={i}
                   className="thumbnail-wrapper"
                   onMouseEnter={() => handleHover(i, "mouseenter")}
                   onMouseLeave={() => handleHover(i, "mouseleave")}
                 >
                   <img
-                    key={i}
                     src={img}
                     alt={`Thumbnail ${i}`}
                     className={`thumbnail ${
@@ -92,7 +144,12 @@ const AdminProductCard = ({ product, onChange }) => {
                     onClick={() => setActiveImage(img)}
                   />
                   {hoveredIndex === i && (
-                    <button className="delete-button">🗑️</button>
+                    <button
+                      className="delete-button"
+                      onClick={() => handleDeleteImage(img)}
+                    >
+                      🗑️
+                    </button>
                   )}
                 </div>
               ))}
@@ -101,7 +158,14 @@ const AdminProductCard = ({ product, onChange }) => {
           <form className="product-details" onSubmit={handleSubmit}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div style={{ flex: 1 }}>
-                <label>Product Name</label>
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <label>Product Name</label>
+                  <button className="collapse-toggle" onClick={toggleCollapse}>
+                    {collapsed && "⬆"}
+                  </button>
+                </div>
                 <input
                   type="text"
                   name="name"
@@ -110,9 +174,6 @@ const AdminProductCard = ({ product, onChange }) => {
                   defaultValue={product_.name}
                 />
               </div>
-              <button className="collapse-toggle" onClick={toggleCollapse}>
-                {collapsed && "⬆"}
-              </button>
             </div>
 
             <div>
@@ -125,7 +186,6 @@ const AdminProductCard = ({ product, onChange }) => {
               ></textarea>
             </div>
 
-            {/* Stock, Price, and Category in same row */}
             <div className="row-3-inputs">
               <div>
                 <label>Stock</label>
@@ -152,20 +212,11 @@ const AdminProductCard = ({ product, onChange }) => {
 
               <div>
                 <label>Category</label>
-                <select
-                  name="categories"
-                  onChange={handleChange}
-                  value={product.categories}
-                >
-                  <option value="" disabled>
-                    Select a category
-                  </option>
-                  {categoriesList.map((category) => (
-                    <option key={category} value={category}>
-                      {category}
-                    </option>
-                  ))}
-                </select>
+                <CustomSelect
+                  options={categoriesList}
+                  onChange={handleCategoryChange}
+                  placeholder="Select category"
+                />
               </div>
             </div>
 
@@ -174,12 +225,16 @@ const AdminProductCard = ({ product, onChange }) => {
                 <label>Image URLs</label>
                 <textarea
                   name="image_urls"
-                  onChange={handleAddImageUrls}
+                  ref={imageUrlsRef}
                   placeholder="Add image URLs here (one per line or comma-separated)"
                 ></textarea>
               </div>
-              <button type="button" className="add-image-btn">
-                Add Image URLs
+              <button
+                onClick={handleAddImageUrls}
+                type="button"
+                className="add-image-btn"
+              >
+                Add <br /> Image URLs
               </button>
             </div>
 
@@ -189,22 +244,24 @@ const AdminProductCard = ({ product, onChange }) => {
                   <input
                     type="checkbox"
                     name="is_active"
-                    checked={product_.is_active === 1 ? false : true}
-                    onChange={(e) =>
+                    checked={product_.is_active}
+                    onChange={(e) => {
                       setProduct((prev) => ({
                         ...prev,
-                        is_active: product_.is_active ? 1 : 0,
-                      }))
-                    }
+                        is_active: e.target.checked,
+                      }));
+                    }}
                   />
                   <span className="slider round"></span>
                 </label>
                 <span style={{ marginLeft: "8px" }}>
-                  {product_.is_active === 0 ? "Active" : "inactive"}
+                  {product_.is_active ? "Active" : "inactive"}
                 </span>
               </div>
               <div className="admin-button">
-                <button type="button">Delete Product</button>
+                <button type="button" onClick={handleDeleteProduct}>
+                  Delete Product
+                </button>
                 <button type="submit">Apply Edits</button>
               </div>
             </div>

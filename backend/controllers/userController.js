@@ -37,10 +37,12 @@ const addUser = async (req, res) => {
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findByEmail(email);
+    let user = await User.findByEmail(email);
 
     if (!user) {
       throw { status: 404, message: "User not found" };
+    } else {
+      user = { ...user, is_admin: user.is_admin === 1 ? true : false };
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -50,11 +52,10 @@ const loginUser = async (req, res) => {
       {
         id: user.id,
         name: user.name,
-        surname: user.surname,
-        email: user.email,
         is_admin: user.is_admin,
       },
-      process.env.ACCESS_TOKEN_SECRET
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "1h" }
     );
 
     res.status(200).json({

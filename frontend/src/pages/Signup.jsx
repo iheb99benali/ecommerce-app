@@ -30,12 +30,10 @@ const Signup = () => {
         email: userData.email,
         password: userData.password,
       });
-      console.log("data", user.data);
 
       localStorage.setItem("token", user.data.token);
       localStorage.setItem("user", JSON.stringify(user.data.user));
       navigate("/");
-      console.log("user created: ", res.data);
     } catch (err) {
       if (err.response?.data.error === "EMAIL_IN_USE") {
         setErrorMessage("EMAIL_IN_USE");

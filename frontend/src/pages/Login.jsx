@@ -21,7 +21,6 @@ const Login = () => {
         "http://localhost:5000/api/users/login",
         loginData
       );
-      console.log("data", user.data);
 
       localStorage.setItem("token", user.data.token);
       localStorage.setItem("user", JSON.stringify(user.data.user));

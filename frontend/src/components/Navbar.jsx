@@ -4,11 +4,6 @@ const Navbar = () => {
   const token = localStorage.getItem("token"); //TODO: handle token with context or redux
   const user = JSON.parse(localStorage.getItem("user")); //TODO: handle token with context or redux
 
-  if (token && user) {
-    console.log("token: ", token);
-    console.log("user: ", user);
-  }
-
   function handleLogout() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");

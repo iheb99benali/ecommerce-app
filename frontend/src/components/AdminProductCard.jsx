@@ -30,7 +30,6 @@ const AdminProductCard = ({ product, onUpdate, onDelete }) => {
   }
 
   function handleCategoryChange(option) {
-    console.log(option);
     setProduct((prev) => ({
       ...prev,
       category: option,

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { categoriesList } from "../assets/constant/categories";
+import { categoriesList } from "../assets/constant/consts";
 const NewProductModal = ({ onClose, onSave }) => {
   const [product, setProduct] = useState({
     name: "",

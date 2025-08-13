@@ -18,14 +18,18 @@ import "./assets/css/flex-slider.css";
 import "./assets/css/owl.css";
 import "./assets/css/templatemo-sixteen.css";
 import "./assets/css/fontawesome.css";
-import "./assets/css/custom-select.css";
-import "./assets/css/admin-card.css";
 
 import "jquery";
 import "popper.js/dist/umd/popper.min.js";
 import "bootstrap/dist/js/bootstrap.min.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 // Template files end
+// personal src files
+import "./assets/css/custom-select.css";
+import "./assets/css/admin-card.css";
+import "./assets/css/search-bar.css";
+
+import "./assets/images/search.png";
 
 function App() {
   return (

@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { categoriesList } from "../assets/constant/categories";
+import { categoriesList } from "../assets/constant/consts";
 import CustomSelect from "./CustomSelect";
 const AdminProductCard = ({ product, onUpdate, onDelete }) => {
   const [product_, setProduct] = useState(product);
@@ -109,10 +109,6 @@ const AdminProductCard = ({ product, onUpdate, onDelete }) => {
     }
   }
 
-  //TODO: - Fix Check switch Functionality
-  // - Fix categories dropdown style
-  // - Add image Delete functionality
-  // - Finish Submit functionality
   return (
     <>
       {!collapsed ? (
@@ -120,7 +116,11 @@ const AdminProductCard = ({ product, onUpdate, onDelete }) => {
           <img className="image-collapsed" src={activeImage} alt="Product" />
           <div className="product-header" onClick={toggleCollapse}>
             <div>
-              <h3>{product_.name}</h3>
+              <h3>
+                {product_.name}{" "}
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;${product_.price}</span>
+              </h3>
+
               <p>{product_.description}</p>
             </div>
 

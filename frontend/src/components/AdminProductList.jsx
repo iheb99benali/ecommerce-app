@@ -2,12 +2,19 @@ import { useEffect, useState } from "react";
 import AdminProductCard from "./AdminProductCard";
 import NewProductModal from "./NewProductModal";
 import axios from "axios";
+import SearchFilterSort from "./SearchFilterSort ";
+import { useSearchParams } from "react-router-dom";
 
 const token = localStorage.getItem("token"); //TODO: handle token with context or redux
 
 const AdminProductList = () => {
   const [showModal, setShowModal] = useState(false);
   const [productList, setProductList] = useState([]);
+  const [searchParams] = useSearchParams();
+
+  const category = searchParams.get("category") || "all";
+  const sort = searchParams.get("sort") || "default";
+  const searchTerm = searchParams.get("search") || "";
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -25,6 +32,28 @@ const AdminProductList = () => {
     };
     fetchProducts();
   }, []);
+
+  useEffect(() => {
+    async function handleParams() {
+      try {
+        console.log("in handleParams");
+        const query = searchParams.toString();
+        let url = `http://localhost:5000/api/admin/products?${query}`;
+        console.log(url);
+
+        const res = await axios.get(url, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        console.log(res);
+
+        setProductList(res.data);
+      } catch (err) {
+        console.error("Error while filtering products:", err);
+        console.log(err.response?.data.error);
+      }
+    }
+    handleParams();
+  }, [category, sort, searchTerm]);
 
   async function handleAddProduct(newProduct, e) {
     try {
@@ -76,6 +105,7 @@ const AdminProductList = () => {
       console.log(err.response?.data.error);
     }
   }
+
   return (
     <div className="product-list">
       <div style={{ marginBottom: "20px" }}>
@@ -90,8 +120,11 @@ const AdminProductList = () => {
         />
       )}
 
-      {/* //TODO: add searchbar, filter and sort */}
-      {productList.map((product, i) => (
+      {/* TODO: search,filter, sort for admin */}
+      <div className="section-heading">
+        <SearchFilterSort />
+      </div>
+      {productList.map((product) => (
         <AdminProductCard
           key={product.id}
           product={product}

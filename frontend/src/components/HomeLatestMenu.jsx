@@ -27,8 +27,8 @@ const HomeLatestMenu = () => {
               </Link>
             </div>
           </div>
-          {productList.map((product, i) => (
-            <ProductCard key={i} product={product} />
+          {productList.map((product) => (
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       </div>

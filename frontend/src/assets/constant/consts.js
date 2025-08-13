@@ -1,4 +1,4 @@
-export const categoriesList = [
+const categoriesList = [
   "T-Shirts",
   "Shirts",
   "Jeans",
@@ -19,3 +19,14 @@ export const categoriesList = [
   "Scarves",
   "Gloves",
 ];
+
+const sortingOptions = [
+  "Price: Low to High",
+  "Price: High to Low",
+  "Newest Arrivals",
+  "Oldest",
+  "Alphabetical: A to Z",
+  "Alphabetical: Z to A",
+];
+
+module.exports = { sortingOptions, categoriesList };

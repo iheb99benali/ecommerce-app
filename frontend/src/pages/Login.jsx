@@ -25,6 +25,7 @@ const Login = () => {
       localStorage.setItem("token", user.data.token);
       localStorage.setItem("user", JSON.stringify(user.data.user));
       navigate("/");
+      window.location.reload();
     } catch (error) {
       console.log(error);
       if (error.status === 404 || error.status === 401) {

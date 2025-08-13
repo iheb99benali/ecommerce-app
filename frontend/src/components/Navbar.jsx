@@ -1,12 +1,14 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const token = localStorage.getItem("token"); //TODO: handle token with context or redux
   const user = JSON.parse(localStorage.getItem("user")); //TODO: handle token with context or redux
-
+  const navigate = useNavigate();
   function handleLogout() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    navigate("/");
+    window.location.reload();
   }
 
   return (
@@ -61,11 +63,7 @@ const Navbar = () => {
               </li>
               <li className="nav-item">
                 {token && user.is_admin ? (
-                  <NavLink
-                    to="/logout"
-                    onClick={handleLogout}
-                    className="nav-link"
-                  >
+                  <NavLink to="/" onClick={handleLogout} className="nav-link">
                     logout
                   </NavLink>
                 ) : (

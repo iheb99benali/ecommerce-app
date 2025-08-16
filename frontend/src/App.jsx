@@ -28,6 +28,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/css/custom-select.css";
 import "./assets/css/admin-card.css";
 import "./assets/css/search-bar.css";
+import "./assets/css/cart-pop-up.css";
 
 import "./assets/images/search.png";
 

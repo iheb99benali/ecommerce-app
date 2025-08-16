@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import CustomSelect from "./CustomSelect";
 import { categoriesList, sortingOptions } from "../assets/constant/consts";
 import { useSearchParams } from "react-router-dom";
@@ -9,7 +9,7 @@ const SearchFilterSort = () => {
 
   const [searchTerm, setSearchTerm] = useState();
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [, setSearchParams] = useSearchParams();
 
   //TODO: fix search functionality
   function handleSearchInput(e) {

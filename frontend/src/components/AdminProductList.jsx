@@ -53,7 +53,7 @@ const AdminProductList = () => {
       }
     }
     handleParams();
-  }, [category, sort, searchTerm]);
+  }, [category, sort, searchTerm, searchParams]);
 
   async function handleAddProduct(newProduct, e) {
     try {

@@ -25,8 +25,9 @@ const getProducts = async (req, res) => {
   } catch (error) {
     if (error.status === 404) {
       res.status(404).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: error.message });
     }
-    res.status(500).json({ error: error.message });
   }
 };
 
@@ -34,6 +35,8 @@ const addProduct = async (req, res) => {
   try {
     const { name, description, price, stock, category, image_urls, is_active } =
       req.body;
+
+    console.log(name);
 
     const prodData = await adminProduct.createProduct({
       name,
@@ -54,14 +57,13 @@ const updateProduct = async (req, res) => {
   try {
     const updatedProduct = await adminProduct.updateProductById(req.body);
 
-    res.json(updatedProduct);
+    res.status(201).json({ message: "product updated", updatedProduct });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 const deleteProduct = async (req, res) => {
   try {
-    console.log("Deleting product with IDc:", req.params.id);
     const deletedProduct = await adminProduct.deleteProductById(req.params.id);
     res
       .status(201)

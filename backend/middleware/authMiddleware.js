@@ -25,4 +25,12 @@ const verifyAdmin = (req, res, next) => {
   }
 };
 
-module.exports = { authenticateToken, verifyAdmin };
+const verifyUser = (req, res, next) => {
+  if (req.user) {
+    next();
+  } else {
+    res.status(403).json({ error: "Access denied. Admins only." });
+  }
+};
+
+module.exports = { authenticateToken, verifyAdmin, verifyUser };

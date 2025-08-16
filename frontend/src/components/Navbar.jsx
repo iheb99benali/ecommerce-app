@@ -13,7 +13,7 @@ const Navbar = () => {
 
   return (
     <header className="">
-      <nav className="navbar navbar-expand-lg">
+      <nav className="navbar sticky-top navbar-expand-lg">
         <div className="container">
           <a className="navbar-brand" href="index.html">
             <h2>

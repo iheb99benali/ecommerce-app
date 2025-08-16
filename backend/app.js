@@ -8,9 +8,12 @@ app.use(express.json());
 const userRoutes = require("./routes/userRoutes");
 const productRoutes = require("./routes/productRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const cartRoutes = require("./routes/cartRoutes");
 
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
+
+app.use("/api/cart", cartRoutes);
 
 app.use("/api/admin", adminRoutes);
 

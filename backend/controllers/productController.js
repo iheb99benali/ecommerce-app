@@ -3,7 +3,6 @@ const product = require("../models/productModel");
 const getProducts = async (req, res) => {
   try {
     const { category, sort, search } = req.query;
-    console.log("search", search);
     if (category || sort || search) {
       const products = await product.getProductsByFilter({
         category,
@@ -24,8 +23,9 @@ const getProducts = async (req, res) => {
   } catch (error) {
     if (error.status === 404) {
       res.status(404).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: error.message });
     }
-    res.status(500).json({ error: error.message });
   }
 };
 

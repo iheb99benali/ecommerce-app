@@ -29,8 +29,9 @@ const addUser = async (req, res) => {
   } catch (error) {
     if (error.code === "ER_DUP_ENTRY") {
       return res.status(400).json({ error: "EMAIL_IN_USE" });
+    } else {
+      res.status(500).json({ error: error.message });
     }
-    res.status(500).json({ error: error.message });
   }
 };
 
@@ -54,10 +55,10 @@ const loginUser = async (req, res) => {
         name: user.name,
         is_admin: user.is_admin,
       },
-      process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "1h" }
+      process.env.ACCESS_TOKEN_SECRET
     );
-
+    // ,
+    //       { expiresIn: "1h" }
     res.status(200).json({
       token,
       user: { email: user.email, is_admin: user.is_admin },

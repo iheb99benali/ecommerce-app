@@ -29,27 +29,34 @@ import "./assets/css/custom-select.css";
 import "./assets/css/admin-card.css";
 import "./assets/css/search-bar.css";
 import "./assets/css/cart-pop-up.css";
+import "./assets/css/auth-forms.css";
+import "./assets/css/product-view.css";
 
 import "./assets/images/search.png";
+import UserProvider from "./context/UserContext";
+import ProductView from "./pages/ProductView";
 
 function App() {
   return (
     <div className="App">
-      <Router>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admin/products" element={<AdminProducts />} />
-          <Route path="/admin/orders" element={<AdminOrders />} />
-          <Route path="/admin/messages" element={<AdminMessages />} />
-        </Routes>
-      </Router>
+      <UserProvider>
+        <Router>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/products/:id" element={<ProductView />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/products" element={<AdminProducts />} />
+            <Route path="/admin/orders" element={<AdminOrders />} />
+            <Route path="/admin/messages" element={<AdminMessages />} />
+          </Routes>
+        </Router>
+      </UserProvider>
     </div>
   );
 }

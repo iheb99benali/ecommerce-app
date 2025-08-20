@@ -1,0 +1,121 @@
+/* AUTH PAGE */
+.auth-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.auth-form {
+  flex: 1;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+}
+
+.auth-form h2 {
+  font-size: 32px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.auth-form p {
+  font-size: 16px;
+  margin-bottom: 30px;
+  color: #666;
+}
+
+.auth-form form {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-form input {
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.auth-form button {
+  padding: 12px 15px;
+  border: none;
+  border-radius: 6px;
+  background-color: #f33f3f; /* red color */
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.auth-form button:hover {
+  background-color: #c72f2f;
+}
+
+.switch-link {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #666;
+}
+
+.switch-link a {
+  color: #f33f3f;
+  text-decoration: none;
+}
+
+.auth-image {
+  flex: 1;
+  background: url("../images/login_signup.jpg") center center / cover no-repeat;
+  position: relative;
+}
+
+.auth-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+}
+
+.auth-overlay h1 {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+.auth-overlay p {
+  font-size: 16px;
+  max-width: 400px;
+  margin: 0 auto;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.white {
+  color: #fff;
+}
+
+.red {
+  color: #f33f3f;
+}
+
+@media (max-width: 768px) {
+  .auth-container {
+    flex-direction: column;
+  }
+
+  .auth-image {
+    height: 300px;
+  }
+
+  .auth-overlay {
+    top: 30%;
+    transform: translate(-50%, -30%);
+  }
+}

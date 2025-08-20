@@ -17,13 +17,13 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const user = await axios.post(
+      const res = await axios.post(
         "http://localhost:5000/api/users/login",
         loginData
       );
 
-      localStorage.setItem("token", user.data.token);
-      localStorage.setItem("user", JSON.stringify(user.data.user));
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
       navigate("/");
       window.location.reload();
     } catch (error) {

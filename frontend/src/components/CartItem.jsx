@@ -1,36 +1,54 @@
 import { useRef, useState } from "react";
 
-const CartItem = ({ item, onRemove }) => {
+const CartItem = ({ item: item_, onRemove, onQtyChange }) => {
   const QtyRef = useRef();
 
-  const [quantity, setQuantity] = useState(item.quantity);
-
-  //   const handleIncrement = (id) => {};
-  //   const handleDecrement = (id) => {};
+  const [item, setItem] = useState(item_);
+  const [quantity, setQuantity] = useState(item_.quantity);
+  const [itemTotal, setItemTotal] = useState(
+    Number(item_.total_price_per_item).toFixed(2)
+  );
   //   const handleDelete = (id) => {};
-  //   const handleEdit = (id) => {};
   function HandleQtyChange(e) {
     setQuantity(Number(e.target.value));
   }
   function decreaseQuantity() {
     setQuantity((prev) => {
-      return prev > 1 ? prev - 1 : prev;
+      const newQty = prev > 1 ? prev - 1 : prev;
+      setItemTotal(newQty * item.unit_price);
+      onQtyChange(item_.cart_item_id, newQty);
+      setItem((prev) => ({ ...prev, quantity: newQty }));
+      QtyRef.current.value = quantity;
+      return newQty;
     });
-    QtyRef.current.value = quantity;
   }
   function increaseQuantity() {
     setQuantity((prev) => {
-      return prev < 10 ? prev + 1 : prev; //TODO: change to stock amount
+      const newQty = prev < 10 ? prev + 1 : prev; //TODO: change to stock amount
+      setItemTotal(newQty * item.unit_price);
+
+      onQtyChange(item_.cart_item_id, newQty);
+      setItem((prev) => ({ ...prev, quantity: newQty }));
+      QtyRef.current.value = quantity;
+      return newQty;
     });
+
     QtyRef.current.value = quantity;
   }
 
   return (
     <div className="cartpop-item">
-      <img src={item.image} alt={item.name} className="cartpop-img" />
+      <img
+        src={item.first_image}
+        alt={item.product_name}
+        className="cartpop-img"
+      />
       <div className="cartpop-details">
-        <p>{item.name}</p>
-        <p>${item.price.toFixed(2)}</p>
+        <p>
+          {item.product_name}
+          <span> &nbsp;&nbsp; ${Number(item.unit_price).toFixed(2)}</span>
+        </p>
+        <p>total: ${itemTotal}</p>
         <div className="cartpop-quantity">
           <button className="cartqty-btn" onClick={decreaseQuantity}>
             -
@@ -47,7 +65,10 @@ const CartItem = ({ item, onRemove }) => {
           </button>
         </div>
       </div>
-      <button className="cartpop-remove" onClick={() => onRemove(item.id)}>
+      <button
+        className="cartpop-remove"
+        onClick={() => onRemove(item.cart_item_id)}
+      >
         🗑
       </button>
     </div>

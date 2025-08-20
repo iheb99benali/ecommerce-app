@@ -19,13 +19,13 @@ const AdminProductList = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get(
+        const res = await axios.get(
           "http://localhost:5000/api/admin/products",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        setProductList(response.data);
+        setProductList(res.data);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -107,6 +107,7 @@ const AdminProductList = () => {
   }
 
   return (
+    //TODO: move fetching and unnecessary components to adminProducts page
     <div className="product-list">
       <div style={{ marginBottom: "20px" }}>
         <button className="ModalButton" onClick={() => setShowModal(true)}>

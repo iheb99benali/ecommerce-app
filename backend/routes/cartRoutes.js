@@ -22,7 +22,7 @@ router.get("/:user_id", authenticateToken, verifyUser, getCart);
 router.delete("/delete/:user_id", authenticateToken, verifyUser, deleteCart); //TODO: migh change to cart_id
 
 //cart items
-router.get("/items/get", authenticateToken, verifyUser, getAllCartItems);
+router.get("/items/:cart_id", authenticateToken, verifyUser, getAllCartItems);
 router.post("/items/create", authenticateToken, verifyUser, addToCart);
 router.delete(
   "/items/delete/:cart_item_id",
@@ -30,8 +30,8 @@ router.delete(
   verifyUser,
   removeFromCart
 );
-router.put(
-  "/item/update/:cart_item_id",
+router.patch(
+  "/items/update/:cart_item_id",
   authenticateToken,
   verifyUser,
   updateCartItem

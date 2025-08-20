@@ -1,5 +1,4 @@
 import CartItem from "./CartItem";
-
 const CartPopUp = ({
   isOpen,
   items,
@@ -7,9 +6,10 @@ const CartPopUp = ({
   onRemove,
   onClear,
   onCheckout,
+  handleQtyChange,
 }) => {
   const totalPrice = items.reduce(
-    (acc, item) => acc + item.price * item.quantity,
+    (acc, item) => acc + item.unit_price * item.quantity,
     0
   );
 
@@ -28,7 +28,12 @@ const CartPopUp = ({
         <>
           <div className="cartpop-list">
             {items.map((item) => (
-              <CartItem key={item.id} item={item} />
+              <CartItem
+                key={item.cart_item_id}
+                item={item}
+                onQtyChange={handleQtyChange}
+                onRemove={onRemove}
+              />
             ))}
           </div>
           <div className="cartpop-footer">

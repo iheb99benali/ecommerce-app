@@ -4,12 +4,11 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 const HomeLatestMenu = () => {
+  //TODO: move to page
   useEffect(() => {
     const getProducts = async () => {
-      const products = await axios.get(
-        "http://localhost:5000/api/products/latest"
-      );
-      setProductList(products.data);
+      const res = await axios.get("http://localhost:5000/api/products/latest");
+      setProductList(res.data.products);
     };
     getProducts();
   }, []);

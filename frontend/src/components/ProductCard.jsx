@@ -5,9 +5,9 @@ const ProductCard = ({ product }) => {
   return (
     <div className="col-md-4">
       <div className="product-item">
-        <a href="#">
+        <Link to={`/products/${product.id}`}>
           <img src={product.image_urls[0]} alt="sad" />
-        </a>
+        </Link>
         <div className="down-content">
           <Link to={`/products/${product.id}`}>
             <h4>{product.name}</h4>

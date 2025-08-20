@@ -1,6 +1,12 @@
-const CartButton = ({ onToggle, itemCount }) => {
+const CartButton = ({ onToggle, itemCount, getCartItems, cartId }) => {
   return (
-    <button className="cartbtn-floating" onClick={onToggle}>
+    <button
+      className="cartbtn-floating"
+      onClick={() => {
+        getCartItems(cartId);
+        onToggle();
+      }}
+    >
       🛒 {itemCount > 0 && <span className="cartbtn-count">{itemCount}</span>}
     </button>
   );

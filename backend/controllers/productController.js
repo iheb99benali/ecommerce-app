@@ -1,10 +1,10 @@
-const product = require("../models/productModel");
+const productData = require("../models/productModel");
 
 const getProducts = async (req, res) => {
   try {
     const { category, sort, search } = req.query;
     if (category || sort || search) {
-      const products = await product.getProductsByFilter({
+      const products = await productData.getProductsByFilter({
         category,
         sort,
         search,
@@ -18,7 +18,7 @@ const getProducts = async (req, res) => {
       res.json(products);
     }
 
-    const products = await product.getAllProducts();
+    const products = await productData.getAllProducts();
     res.json(products);
   } catch (error) {
     if (error.status === 404) {
@@ -29,13 +29,24 @@ const getProducts = async (req, res) => {
   }
 };
 
+const getProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await productData.getProductById(id);
+    console.log(product);
+    res.status(200).json({ product });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ error: error.message });
+  }
+};
 const getLatest = async (req, res) => {
   try {
-    const products = await product.getLatestProducts();
-    res.json(products);
+    const products = await productData.getLatestProducts();
+    res.json({ products });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-module.exports = { getLatest, getProducts };
+module.exports = { getLatest, getProducts, getProduct };

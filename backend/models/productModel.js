@@ -5,6 +5,13 @@ const getAllProducts = async () => {
   return rows;
 };
 
+const getProductById = async (id) => {
+  console.log(id);
+  const [rows] = await db.query("SELECT * FROM products WHERE id = ?", [id]);
+  console.log(rows);
+  return rows[0];
+};
+
 const getLatestProducts = async () => {
   const [rows] = await db.query(
     "SELECT * FROM products ORDER BY created_at DESC LIMIT 3"
@@ -39,4 +46,9 @@ const getProductsByFilter = async ({ category, sort, search }) => {
   return rows;
 };
 
-module.exports = { getLatestProducts, getAllProducts, getProductsByFilter };
+module.exports = {
+  getLatestProducts,
+  getProductById,
+  getAllProducts,
+  getProductsByFilter,
+};

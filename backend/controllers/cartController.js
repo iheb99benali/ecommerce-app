@@ -6,7 +6,9 @@ const getCart = async (req, res) => {
     const { user_id } = req.params;
     console.log(req.params);
     const cart = await cartData.getCartByUserId(user_id);
-    res.status(200).json({ message: "cart fetched successfully", cart: cart });
+    res
+      .status(200)
+      .json({ message: "cart fetched successfully", cart: cart[0] });
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch cart" });
   }
@@ -58,14 +60,20 @@ const addToCart = async (req, res) => {
       .status(200)
       .json({ message: "item added to cart", id: result.insertId });
   } catch (err) {
-    res.status(500).json({ error: "Failed to add item  to cart" });
+    res
+      .status(500)
+      .json({ error: "Failed to add item  to cart", message: err.message });
   }
 };
 const removeFromCart = async (req, res) => {
   try {
     const { cart_item_id } = req.params;
-    const result = await cartData.removeItemFromCart(cart_item_id);
-    res.status(200).json({ message: "item deleted cart", id: result.insertId });
+    const { cart_id } = req.query;
+
+    console.log("removeFromCart id:", cart_item_id);
+    const cart = await cartData.removeItemFromCart(cart_item_id, cart_id);
+
+    res.status(200).json({ message: "item deleted from cart", cart: cart });
   } catch (err) {
     res.status(500).json({ error: "Failed to add item  to cart" });
   }
@@ -73,14 +81,16 @@ const removeFromCart = async (req, res) => {
 const updateCartItem = async (req, res) => {
   try {
     const { cart_item_id } = req.params;
-    const { product_id, quantity } = req.body;
-    const result = await cartData.updateCartItem({
-      quantity,
+    const { quantity, cart_id } = req.body;
+
+    const cart = await cartData.updateCartItem({
       cart_item_id,
-      product_id,
+      quantity,
+      cart_id,
     });
 
-    res.status(200).json({ message: "item updated in cart" });
+    console.log("cart after update in cart controller", cart);
+    res.status(200).json({ message: "item updated in cart", cart: cart });
   } catch (err) {
     res.status(500).json({ error: "Failed to add item  to cart" });
   }

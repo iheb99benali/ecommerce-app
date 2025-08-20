@@ -30,22 +30,27 @@ const addItem = async ({ cart_id, product_id, quantity }) => {
   );
   return result;
 };
-const removeItemFromCart = async (cart_item_id) => {
+const removeItemFromCart = async (cart_item_id, cart_id) => {
   console.log("deleting:", cart_item_id);
   const [result] = await db.query(
     "DELETE FROM cart_items WHERE (cart_item_id) = (?)",
     cart_item_id
   );
-  return result;
+  const rows = await getAllCartItems(cart_id);
+  console.log(rows.length);
+  if (rows.length === 0) {
+    await db.query("DELETE FROM cart WHERE (cart_id) = (?)", cart_id);
+  }
+  return rows;
 };
 
-const updateCartItem = async ({ quantity, cart_item_id, product_id }) => {
+const updateCartItem = async ({ cart_item_id, quantity, cart_id }) => {
   const [result] = await db.query(
-    "UPDATE cart_items set quantity = quantity + ? WHERE cart_item_id = ? AND product_id = ?",
-    [quantity, cart_item_id, product_id]
+    "UPDATE cart_items set quantity = ? WHERE cart_item_id = ?",
+    [quantity, cart_item_id]
   ); //TODO: check correct logic with quantity
-  console.log(result);
-  return result;
+  const rows = await getAllCartItems(cart_id);
+  return rows;
 };
 
 const getAllCartItems = async (cart_id) => {
@@ -56,7 +61,8 @@ const getAllCartItems = async (cart_id) => {
         ci.quantity,
         p.name AS product_name,
         p.price AS unit_price,
-        (ci.quantity * p.price) AS total_price_per_item
+        (ci.quantity * p.price) AS total_price_per_item,
+        JSON_UNQUOTE(JSON_EXTRACT(p.image_urls, '$[0]')) AS first_image
      FROM cart_items ci
      JOIN products p ON ci.product_id = p.id
      WHERE ci.cart_id = ?`,

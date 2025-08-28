@@ -5,39 +5,14 @@ import ProductMenu from "../components/ProductMenu";
 import axios from "axios";
 import { useSearchParams } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
+import { CartContext } from "../context/CartContext";
 
-const placeholderCartItems = [
-  {
-    id: 1,
-    name: "Chicken Burrito",
-    price: 12.99,
-    quantity: 2,
-  },
-  {
-    id: 2,
-    name: "Cheeseburger",
-    price: 9.5,
-    quantity: 1,
-  },
-  {
-    id: 3,
-    name: "Loaded Fries",
-    price: 6.25,
-    quantity: 3,
-  },
-  {
-    id: 4,
-    name: "Veggie Wrap",
-    price: 8.75,
-    quantity: 1,
-  },
-];
 const Products = () => {
   const token = localStorage.getItem("token");
   const { user } = useContext(UserContext);
+  const { cart } = useContext(CartContext);
 
-  const [productList, setProductList] = useState([]);
-  const [cart, setCart] = useState();
+  const [productsList, setProductsList] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
 
@@ -50,7 +25,7 @@ const Products = () => {
   useEffect(() => {
     const getProducts = async () => {
       const products = await axios.get("http://localhost:5000/api/products");
-      setProductList(products.data);
+      setProductsList(products.data);
     };
     getProducts();
   }, []);
@@ -59,11 +34,12 @@ const Products = () => {
     async function handleParams() {
       try {
         const query = searchParams.toString();
-        let url = `http://localhost:5000/api/products?${query}`;
 
-        const res = await axios.get(url);
+        const res = await axios.get(
+          `http://localhost:5000/api/products?${query}`
+        );
 
-        setProductList(res.data);
+        setProductsList(res.data);
       } catch (err) {
         console.error("Error while filtering products:", err);
         console.log(err.response?.data.error);
@@ -73,17 +49,6 @@ const Products = () => {
   }, [category, sort, searchTerm, searchParams]);
 
   // *********CART FUNCTIONALITIES********* //
-  useEffect(() => {
-    if (!user) return;
-    const getCart = async () => {
-      const res = await axios.get(`http://localhost:5000/api/cart/${user.id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setCart(res.data.cart);
-    };
-
-    getCart();
-  }, [user, token]);
 
   const toggleCart = () => {
     setIsOpen(!isOpen);
@@ -157,7 +122,7 @@ const Products = () => {
       <CartButton
         cartId={cart?.cart_id}
         onToggle={toggleCart}
-        itemCount={cartItems.length}
+        itemCount={cart?.total_items}
         getCartItems={getCartItems}
       />
       <CartPopUp
@@ -169,7 +134,7 @@ const Products = () => {
         onCheckout={handleCheckout}
         handleQtyChange={handleQtyChange}
       />
-      <ProductMenu productList={productList} />
+      <ProductMenu productsList={productsList} />
     </>
   );
 };

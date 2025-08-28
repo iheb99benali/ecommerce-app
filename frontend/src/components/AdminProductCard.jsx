@@ -1,27 +1,21 @@
 import { useState, useRef } from "react";
 import { categoriesList } from "../assets/constant/consts";
 import CustomSelect from "./CustomSelect";
-const AdminProductCard = ({ product, onUpdate, onDelete }) => {
-  const [product_, setProduct] = useState(product);
-  const [hoveredIndex, setHoveredIndex] = useState(null);
+import AdminImageSelector from "./AdminImageSelector";
+const AdminProductCard = ({ product: product_, onUpdate, onDelete, user }) => {
+  const [product, setProduct] = useState(product_);
   const [collapsed, setCollapsed] = useState(false);
-  const [imageUrls, setImageUrls] = useState(product.image_urls);
-  const [activeImage, setActiveImage] = useState(product.image_urls[0]);
+  const [imageUrls, setImageUrls] = useState(product_.image_urls);
+  const [activeImage, setActiveImage] = useState(imageUrls[0]);
 
   const imageUrlsRef = useRef(null);
 
   function toggleCollapse() {
     setCollapsed((prev) => !prev);
   }
-  function handleHover(i, event) {
-    if (event === "mouseenter") {
-      setHoveredIndex(i);
-    } else {
-      setHoveredIndex(null);
-    }
-  }
 
   function handleChange(e) {
+    console.log(user.is_admin);
     const { name, value } = e.target;
     setProduct((prev) => ({
       ...prev,
@@ -57,26 +51,23 @@ const AdminProductCard = ({ product, onUpdate, onDelete }) => {
     imageUrlsRef.current.value = "";
   }
 
-  function handleDeleteImage(urlToDelete) {
+  function handleDeleteImage(activeImage, urlToDelete) {
     if (imageUrls.length <= 1) {
       alert("Cannot delete the last remaining image.");
       return;
     }
 
-    // Remove the url from imageUrls and product_.image_urls
     setImageUrls((prev) => prev.filter((url) => url !== urlToDelete));
     setProduct((prev) => ({
       ...prev,
       image_urls: prev.image_urls.filter((url) => url !== urlToDelete),
     }));
 
-    // If the deleted image is currently active, switch to another image
     if (activeImage === urlToDelete) {
       const remainingImages = imageUrls.filter((url) => url !== urlToDelete);
-      setActiveImage(remainingImages[0] || "");
+      setActiveImage(remainingImages[0]);
     }
 
-    // Append the deleted URL to the textarea (preserving any existing content)
     if (imageUrlsRef.current) {
       const currentValue = imageUrlsRef.current.value.trim();
       imageUrlsRef.current.value = currentValue
@@ -88,24 +79,24 @@ const AdminProductCard = ({ product, onUpdate, onDelete }) => {
   function handleSubmit(e) {
     e.preventDefault();
     if (
-      product.name &&
-      product.description &&
-      product.stock >= 0 &&
-      product.price > 0
+      product_.name &&
+      product_.description &&
+      product_.stock >= 0 &&
+      product_.price > 0
     ) {
-      onUpdate(product_);
+      onUpdate(product);
     } else {
       alert("Please fill in all fields correctly.");
     }
   }
 
   function handleDiscard() {
-    setProduct(product);
+    setProduct((prev) => ({ ...prev, ...product_ }));
   }
 
   function handleDeleteProduct() {
     if (window.confirm("Are you sure you want to delete this product?")) {
-      onDelete(product.id);
+      onDelete(product_.id);
     }
   }
 
@@ -113,15 +104,19 @@ const AdminProductCard = ({ product, onUpdate, onDelete }) => {
     <>
       {!collapsed ? (
         <div className={`product-card `}>
-          <img className="image-collapsed" src={activeImage} alt="Product" />
+          <img
+            className="image-collapsed"
+            src={product.image_urls[0]}
+            alt="Product"
+          />
           <div className="product-header" onClick={toggleCollapse}>
             <div>
               <h3>
-                {product_.name}{" "}
-                <span>&nbsp;&nbsp;&nbsp;&nbsp;${product_.price}</span>
+                {product.name}{" "}
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;${product.price}</span>
               </h3>
 
-              <p>{product_.description}</p>
+              <p>{product.description}</p>
             </div>
 
             <button className="collapse-toggle">{!collapsed && "⬇"}</button>
@@ -129,36 +124,13 @@ const AdminProductCard = ({ product, onUpdate, onDelete }) => {
         </div>
       ) : (
         <div className="product-card">
-          <div className="product-images">
-            <img className="main-image" src={activeImage} alt="Product" />
-            <div className="thumbnail-grid">
-              {product_.image_urls.slice(0).map((img, i) => (
-                <div
-                  key={i}
-                  className="thumbnail-wrapper"
-                  onMouseEnter={() => handleHover(i, "mouseenter")}
-                  onMouseLeave={() => handleHover(i, "mouseleave")}
-                >
-                  <img
-                    src={img}
-                    alt={`Thumbnail ${i}`}
-                    className={`thumbnail ${
-                      img === activeImage ? "active" : ""
-                    }`}
-                    onClick={() => setActiveImage(img)}
-                  />
-                  {hoveredIndex === i && (
-                    <button
-                      className="delete-button"
-                      onClick={() => handleDeleteImage(img)}
-                    >
-                      🗑️
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
+          <AdminImageSelector
+            activeImage={activeImage}
+            setActiveImage={setActiveImage}
+            onDelete={handleDeleteImage}
+            images={imageUrls}
+            isAdmin={user.is_admin}
+          />
           <form className="product-details" onSubmit={handleSubmit}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div style={{ flex: 1 }}>
@@ -175,7 +147,7 @@ const AdminProductCard = ({ product, onUpdate, onDelete }) => {
                   name="name"
                   onChange={handleChange}
                   placeholder="Product Name"
-                  defaultValue={product_.name}
+                  defaultValue={product.name}
                 />
               </div>
             </div>
@@ -186,7 +158,7 @@ const AdminProductCard = ({ product, onUpdate, onDelete }) => {
                 placeholder="Description"
                 name="description"
                 onChange={handleChange}
-                defaultValue={product_.description}
+                defaultValue={product.description}
               ></textarea>
             </div>
 
@@ -198,7 +170,7 @@ const AdminProductCard = ({ product, onUpdate, onDelete }) => {
                   name="stock"
                   onChange={handleChange}
                   placeholder="Stock"
-                  defaultValue={product_.stock}
+                  defaultValue={product.stock}
                 />
               </div>
 
@@ -210,7 +182,7 @@ const AdminProductCard = ({ product, onUpdate, onDelete }) => {
                   onChange={handleChange}
                   step="0.01"
                   placeholder="Price"
-                  defaultValue={product_.price}
+                  defaultValue={product.price}
                 />
               </div>
 
@@ -219,7 +191,7 @@ const AdminProductCard = ({ product, onUpdate, onDelete }) => {
                 <CustomSelect
                   options={categoriesList}
                   onChange={handleCategoryChange}
-                  placeholder={`${product_.category}`}
+                  placeholder={`${product.category}`}
                 />
               </div>
             </div>
@@ -248,7 +220,7 @@ const AdminProductCard = ({ product, onUpdate, onDelete }) => {
                   <input
                     type="checkbox"
                     name="is_active"
-                    checked={product_.is_active}
+                    checked={product.is_active}
                     onChange={(e) => {
                       setProduct((prev) => ({
                         ...prev,
@@ -259,7 +231,7 @@ const AdminProductCard = ({ product, onUpdate, onDelete }) => {
                   <span className="slider round"></span>
                 </label>
                 <span style={{ marginLeft: "8px" }}>
-                  {product_.is_active ? "Active" : "inactive"}
+                  {product.is_active ? "Active" : "inactive"}
                 </span>
               </div>
               <div className="admin-button">
@@ -269,9 +241,9 @@ const AdminProductCard = ({ product, onUpdate, onDelete }) => {
 
                 <button
                   type="button"
-                  disabled={product === product_ ? true : false}
+                  disabled={product_ === product ? true : false}
                   style={
-                    product === product_
+                    product_ === product
                       ? { background: "grey", cursor: "default" }
                       : { background: "blue" }
                   }

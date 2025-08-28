@@ -17,7 +17,7 @@ const {
 } = require("../controllers/cartController");
 
 //cart
-router.post("/create", authenticateToken, verifyUser, createCart);
+router.post("/create", authenticateToken, verifyUser, createCart); //NOTE: not being used
 router.get("/:user_id", authenticateToken, verifyUser, getCart);
 router.delete("/delete/:user_id", authenticateToken, verifyUser, deleteCart); //TODO: migh change to cart_id
 

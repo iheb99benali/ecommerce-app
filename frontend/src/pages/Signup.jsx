@@ -25,20 +25,29 @@ const Signup = () => {
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/users", userData);
-      const user = await axios.post("http://localhost:5000/api/users/login", {
+      await axios.post("http://localhost:5000/api/users", userData);
+
+      const res = await axios.post("http://localhost:5000/api/users/login", {
         email: userData.email,
         password: userData.password,
       });
 
-      localStorage.setItem("token", user.data.token);
-      localStorage.setItem("user", JSON.stringify(user.data.user));
+      const user = res.data.user;
+      const token = res.data.token;
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      await axios.post(
+        "http://localhost:5000/api/cart/create",
+        { user_id: user.id },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       navigate("/");
     } catch (err) {
       if (err.response?.data.error === "EMAIL_IN_USE") {
         setErrorMessage("EMAIL_IN_USE");
       }
-      console.log(err.response?.data.error);
+      console.log(err);
     }
   }
 

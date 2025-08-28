@@ -15,11 +15,11 @@ const Navbar = () => {
     <header className="">
       <nav className="navbar sticky-top navbar-expand-lg">
         <div className="container">
-          <a className="navbar-brand" href="index.html">
+          <NavLink to="/" className="navbar-brand">
             <h2>
               Sixteen <em>Clothing</em>
             </h2>
-          </a>
+          </NavLink>
           <button
             className="navbar-toggler"
             type="button"
@@ -62,7 +62,7 @@ const Navbar = () => {
                 </NavLink>
               </li>
               <li className="nav-item">
-                {token && user.is_admin ? (
+                {token ? (
                   <NavLink to="/" onClick={handleLogout} className="nav-link">
                     logout
                   </NavLink>

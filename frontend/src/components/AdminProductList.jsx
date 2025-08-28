@@ -6,6 +6,7 @@ import SearchFilterSort from "./SearchFilterSort ";
 import { useSearchParams } from "react-router-dom";
 
 const token = localStorage.getItem("token"); //TODO: handle token with context or redux
+const user = JSON.parse(localStorage.getItem("user"));
 
 const AdminProductList = () => {
   const [showModal, setShowModal] = useState(false);
@@ -127,6 +128,7 @@ const AdminProductList = () => {
       </div>
       {productList.map((product) => (
         <AdminProductCard
+          user={user}
           key={product.id}
           product={product}
           onDelete={handleDeleteProduct}

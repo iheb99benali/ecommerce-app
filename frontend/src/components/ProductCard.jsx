@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import productImg from "../assets/images/product_01.jpg";
 
 const ProductCard = ({ product }) => {
   return (

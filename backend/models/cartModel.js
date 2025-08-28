@@ -23,7 +23,7 @@ const deleteCartByUserId = async (user_id) => {
   );
   return result;
 };
-const addItem = async ({ cart_id, product_id, quantity }) => {
+const addItemToCart = async ({ cart_id, product_id, quantity }) => {
   const [result] = await db.query(
     "INSERT INTO cart_items (cart_id, product_id, quantity) VALUES (?,?,?) ON DUPLICATE KEY UPDATE quantity = quantity + VALUES(quantity)",
     [cart_id, product_id, quantity]
@@ -75,7 +75,7 @@ module.exports = {
   getCartByUserId,
   createCartByUserId,
   deleteCartByUserId,
-  addItem,
+  addItemToCart,
   removeItemFromCart,
   updateCartItem,
   getAllCartItems,

@@ -15,8 +15,14 @@ const UserProvider = ({ children }) => {
         const res = await axios.get("http://localhost:5000/api/users/user", {
           headers: { Authorization: `Bearer ${token}` },
         });
+        console.log("object", res.data);
+        const user = {
+          id: res.data.id,
+          name: res.data.name,
+          iat: res.data.iat,
+        };
 
-        setUser(res.data);
+        setUser(user);
       } catch (err) {
         console.error("Error fetching user:", err);
         setUser(null);

@@ -61,7 +61,7 @@ const loginUser = async (req, res) => {
     //       { expiresIn: "1h" }
     res.status(200).json({
       token,
-      user: { email: user.email, is_admin: user.is_admin },
+      user: { id: user.id, email: user.email, is_admin: user.is_admin },
     });
   } catch (err) {
     if (err.status === 404) {

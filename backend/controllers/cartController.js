@@ -16,11 +16,9 @@ const getCart = async (req, res) => {
 
 const createCart = async (req, res) => {
   try {
-    console.log("in cart cont");
     const { user_id } = req.body;
     const cart = await cartData.createCartByUserId(user_id);
-    console.log(cart);
-    res.status(201).json({ message: "product created", id: cart.insertId });
+    res.status(201).json({ message: "cart created", id: cart.insertId });
   } catch (err) {
     if (err.code === "ER_DUP_ENTRY") {
       res.status(400).json({ error: err.message });
@@ -54,8 +52,14 @@ const getAllCartItems = async (req, res) => {
 
 const addToCart = async (req, res) => {
   try {
-    const { cart_id, product_id, quantity } = req.body;
-    const result = await cartData.addItem({ cart_id, product_id, quantity });
+    console.log("in cart/items/create");
+    const { user_id, cart_id, product_id, quantity } = req.body;
+    const result = await cartData.addItemToCart({
+      user_id,
+      cart_id,
+      product_id,
+      quantity,
+    });
     res
       .status(200)
       .json({ message: "item added to cart", id: result.insertId });

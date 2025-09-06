@@ -1,10 +1,13 @@
 import AdminLayout from "../components/AdminLayout";
+import AppLayout from "../components/AppLayout";
 
 const AdminOrders = () => {
   return (
-    <AdminLayout>
-      <div className="admin-orders">orders</div>
-    </AdminLayout>
+    <AppLayout>
+      <AdminLayout>
+        <div className="admin-orders">orders</div>
+      </AdminLayout>
+    </AppLayout>
   );
 };
 

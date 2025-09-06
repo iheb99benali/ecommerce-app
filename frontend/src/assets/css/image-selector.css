@@ -1,8 +1,6 @@
-/* Left section: images */
 .product-images {
   flex: 1;
   max-width: 100%;
-  min-width: 100%;
 }
 
 /* full view */

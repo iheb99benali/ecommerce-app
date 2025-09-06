@@ -6,6 +6,7 @@ import axios from "axios";
 import { useSearchParams } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 import { CartContext } from "../context/CartContext";
+import AppLayout from "../components/AppLayout";
 
 const Products = () => {
   const token = localStorage.getItem("token");
@@ -24,8 +25,14 @@ const Products = () => {
 
   useEffect(() => {
     const getProducts = async () => {
-      const products = await axios.get("http://localhost:5000/api/products");
-      setProductsList(products.data);
+      try {
+        const products = await axios.get("http://localhost:5000/api/products");
+        console.log(products.data);
+        setProductsList(products.data);
+      } catch (err) {
+        console.error("Error while filtering products:", err);
+        console.log(err.response?.data.error);
+      }
     };
     getProducts();
   }, []);
@@ -106,7 +113,7 @@ const Products = () => {
     }, 1000);
   }
   return (
-    <>
+    <AppLayout>
       <div className="page-heading products-heading header-text">
         <div className="container">
           <div className="row">
@@ -135,7 +142,7 @@ const Products = () => {
         handleQtyChange={handleQtyChange}
       />
       <ProductMenu productsList={productsList} />
-    </>
+    </AppLayout>
   );
 };
 

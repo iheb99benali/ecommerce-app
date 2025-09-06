@@ -28,5 +28,5 @@ const sortingOptions = [
   "Alphabetical: A to Z",
   "Alphabetical: Z to A",
 ];
-
-module.exports = { sortingOptions, categoriesList };
+const actions = { reply: "↩", read: "✔️", archive: "🗃️", delete: "🗑️" };
+module.exports = { sortingOptions, categoriesList, actions };

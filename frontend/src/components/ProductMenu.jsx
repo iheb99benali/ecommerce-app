@@ -1,7 +1,8 @@
 import ProductCard from "./ProductCard";
 import SearchFilterSort from "./SearchFilterSort ";
 
-const ProductMenu = ({ productList }) => {
+const ProductMenu = ({ productsList }) => {
+  console.log(productsList);
   return (
     <div className="latest-products">
       <div className="container">
@@ -11,7 +12,7 @@ const ProductMenu = ({ productList }) => {
               <SearchFilterSort />
             </div>
           </div>
-          {productList.map(
+          {productsList.map(
             (product) =>
               product.is_active && (
                 <ProductCard key={product.id} product={product} />

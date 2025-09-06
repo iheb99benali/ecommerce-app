@@ -57,7 +57,7 @@ const deleteProductById = async (id) => {
   return result;
 };
 
-const getProductsByFilter = async ({ category, sort, search }) => {
+const getProductsByQueryParams = async ({ category, sort, search }) => {
   let query = "SELECT * FROM products WHERE 1=1";
   let params = [];
 
@@ -89,5 +89,5 @@ module.exports = {
   createProduct,
   updateProductById,
   deleteProductById,
-  getProductsByFilter,
+  getProductsByQueryParams,
 };

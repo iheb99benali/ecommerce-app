@@ -24,6 +24,7 @@ import "popper.js/dist/umd/popper.min.js";
 import "bootstrap/dist/js/bootstrap.min.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 // Template files end
+
 // personal src files
 import "./assets/css/custom-select.css";
 import "./assets/css/admin-card.css";
@@ -32,6 +33,7 @@ import "./assets/css/cart-pop-up.css";
 import "./assets/css/auth-forms.css";
 import "./assets/css/product-view.css";
 import "./assets/css/image-selector.css";
+import "./assets/css/table.css";
 
 import "./assets/images/search.png";
 import UserProvider from "./context/UserContext";
@@ -44,7 +46,6 @@ function App() {
       <UserProvider>
         <CartProvider>
           <Router>
-            <Navbar />
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/products" element={<Products />} />

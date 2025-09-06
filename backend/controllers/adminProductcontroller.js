@@ -5,7 +5,7 @@ const getProducts = async (req, res) => {
     const { category, sort, search } = req.query;
     console.log(search);
     if (category || sort || search) {
-      const products = await adminProduct.getProductsByFilter({
+      const products = await adminProduct.getProductsByQueryParams({
         category,
         sort,
         search,

@@ -1,11 +1,14 @@
 import AdminLayout from "../components/AdminLayout";
 import AdminProductList from "../components/AdminProductList";
+import AppLayout from "../components/AppLayout";
 
 const AdminProducts = () => {
   return (
-    <AdminLayout>
-      <AdminProductList />
-    </AdminLayout>
+    <AppLayout>
+      <AdminLayout>
+        <AdminProductList />
+      </AdminLayout>
+    </AppLayout>
   );
 };
 

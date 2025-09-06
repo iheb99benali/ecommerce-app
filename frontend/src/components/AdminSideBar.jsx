@@ -37,12 +37,6 @@ const AdminSideBar = () => {
               📨 Messages
             </Link>
           </li>
-          {/* 
-            Future additions:
-            - Dashboard Overview (Analytics, Charts)
-            - User Management
-            - Settings
-          */}
         </ul>
       </nav>
     </aside>

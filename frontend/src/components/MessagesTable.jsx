@@ -38,24 +38,38 @@ const MessagesTable = ({
             </tr>
           </thead>
           <tbody>
-            {messages.map((msg, index) => (
-              <TableRow
-                actions={actions}
-                handleAction={handleAction}
-                key={index}
-                index={index}
-                message={msg}
-                statusColor={
-                  msg.status === "pending"
-                    ? "#FFA500"
-                    : msg.status === "read"
-                    ? `#1E90FF`
-                    : msg.status === "replied"
-                    ? `#28A745`
-                    : msg.status === "archived" && `#6c757d`
-                }
-              />
-            ))}
+            {messages.map((msg, index) => {
+              //WARNING: static code
+              delete msg.user_id;
+              const msg_ = {
+                id: msg.message_id,
+                name: msg.name,
+                email: msg.email,
+                subject: msg.subject,
+                message: msg.message,
+                status: msg.status,
+                date: msg.created_at,
+              };
+
+              return (
+                <TableRow
+                  actions={actions}
+                  handleAction={handleAction}
+                  key={index}
+                  index={index}
+                  dataRow={msg_}
+                  statusColor={
+                    msg_.status === "pending"
+                      ? "#FFA500"
+                      : msg_.status === "read"
+                      ? `#1E90FF`
+                      : msg_.status === "replied"
+                      ? `#28A745`
+                      : msg_.status === "archived" && `#6c757d`
+                  }
+                />
+              );
+            })}
           </tbody>
         </table>
       </div>

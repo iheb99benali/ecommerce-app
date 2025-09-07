@@ -1,4 +1,6 @@
+import { useContext } from "react";
 import CartItem from "./CartItem";
+import { CartContext } from "../context/CartContext";
 const CartPopUp = ({
   isOpen,
   items,
@@ -7,12 +9,8 @@ const CartPopUp = ({
   onClear,
   onCheckout,
   handleQtyChange,
+  totalPrice,
 }) => {
-  const totalPrice = items.reduce(
-    (acc, item) => acc + item.unit_price * item.quantity,
-    0
-  );
-
   return (
     <div className={`cartpop-container ${isOpen ? "cartpop-show" : ""}`}>
       <div className="cartpop-header">

@@ -11,12 +11,8 @@ import AppLayout from "../components/AppLayout";
 const Products = () => {
   const token = localStorage.getItem("token");
   const { user } = useContext(UserContext);
-  const { cart } = useContext(CartContext);
 
   const [productsList, setProductsList] = useState([]);
-  const [isOpen, setIsOpen] = useState(false);
-  const [cartItems, setCartItems] = useState([]);
-
   const [searchParams] = useSearchParams();
 
   const category = searchParams.get("category") || "all";
@@ -27,7 +23,6 @@ const Products = () => {
     const getProducts = async () => {
       try {
         const products = await axios.get("http://localhost:5000/api/products");
-        console.log(products.data);
         setProductsList(products.data);
       } catch (err) {
         console.error("Error while filtering products:", err);
@@ -57,61 +52,8 @@ const Products = () => {
 
   // *********CART FUNCTIONALITIES********* //
 
-  const toggleCart = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const handleClear = () => {
-    setCartItems([]);
-  };
-
-  const handleCheckout = () => {
-    alert("Proceeding to checkout...");
-    // here you can redirect or call API
-  };
-
-  async function getCartItems(cart_id) {
-    if (!cart) return;
-
-    const res = await axios.get(
-      `http://localhost:5000/api/cart/items/${cart_id}`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
-
-    setCartItems(res.data.cart);
-  }
-
-  //cart item delete
-  async function handleCartItemDelete(itemId) {
-    try {
-      const res = await axios.delete(
-        `http://localhost:5000/api/cart/items/delete/${itemId}?cart_id=${cart.cart_id}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setCartItems(res.data.cart);
-    } catch (err) {
-      console.log(err.message);
-    }
-  }
   //delayed update Quantity function
-  let updateTimer;
-  function handleQtyChange(itemId, qty) {
-    clearTimeout(updateTimer);
-    updateTimer = setTimeout(async () => {
-      try {
-        const res = await axios.patch(
-          `http://localhost:5000/api/cart/items/update/${itemId}`,
-          { quantity: qty, cart_id: cart.cart_id },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        setCartItems(res.data.cart);
-      } catch (err) {
-        console.log(err);
-      }
-    }, 1000);
-  }
+
   return (
     <AppLayout>
       <div className="page-heading products-heading header-text">
@@ -126,21 +68,7 @@ const Products = () => {
           </div>
         </div>
       </div>
-      <CartButton
-        cartId={cart?.cart_id}
-        onToggle={toggleCart}
-        itemCount={cart?.total_items}
-        getCartItems={getCartItems}
-      />
-      <CartPopUp
-        isOpen={isOpen}
-        items={cartItems}
-        onClose={toggleCart}
-        onRemove={handleCartItemDelete}
-        onClear={handleClear}
-        onCheckout={handleCheckout}
-        handleQtyChange={handleQtyChange}
-      />
+
       <ProductMenu productsList={productsList} />
     </AppLayout>
   );

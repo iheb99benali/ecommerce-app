@@ -12,6 +12,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminProducts from "./pages/AdminProducts";
 import AdminOrders from "./pages/AdminOrders";
 import AdminMessages from "./pages/AdminMessages";
+import ProductView from "./pages/ProductView";
 
 // Importing template files
 import "./assets/css/flex-slider.css";
@@ -33,34 +34,38 @@ import "./assets/css/cart-pop-up.css";
 import "./assets/css/auth-forms.css";
 import "./assets/css/product-view.css";
 import "./assets/css/image-selector.css";
-import "./assets/css/table.css";
+import "./assets/css/admin-messages-page.css";
+import "./assets/css/admin-orders-page.css";
 
 import "./assets/images/search.png";
+
 import UserProvider from "./context/UserContext";
-import ProductView from "./pages/ProductView";
 import CartProvider from "./context/CartContext";
+import ReplyModalProvider from "./context/ReplyModalContext";
 
 function App() {
   return (
     <div className="App">
       <UserProvider>
         <CartProvider>
-          <Router>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/products" element={<Products />} />
-              <Route path="/products/:id" element={<ProductView />} />
+          <ReplyModalProvider>
+            <Router>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/products" element={<Products />} />
+                <Route path="/products/:id" element={<ProductView />} />
 
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="/admin/products" element={<AdminProducts />} />
-              <Route path="/admin/orders" element={<AdminOrders />} />
-              <Route path="/admin/messages" element={<AdminMessages />} />
-            </Routes>
-          </Router>
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/admin/products" element={<AdminProducts />} />
+                <Route path="/admin/orders" element={<AdminOrders />} />
+                <Route path="/admin/messages" element={<AdminMessages />} />
+              </Routes>
+            </Router>
+          </ReplyModalProvider>
         </CartProvider>
       </UserProvider>
     </div>

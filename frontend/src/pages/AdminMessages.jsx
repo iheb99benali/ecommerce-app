@@ -1,15 +1,16 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AdminLayout from "../components/AdminLayout";
 import AppLayout from "../components/AppLayout";
-import MessagesTable from "../components/MessagesTable";
 import axios from "axios";
-import { actions } from "../assets/constant/consts";
+import ReplyModalProvider from "../context/ReplyModalContext";
+import { ReplyModalContext } from "../context/ReplyModalContext";
+import AdminMessagesContent from "../components/AdminMessagesContent";
+import ReplyModal from "../components/ReplyModal";
 
 const token = localStorage.getItem("token");
 const AdminMessages = () => {
   const [messages, setMessages] = useState();
-  const [replyModal, setReplyModal] = useState();
-
+  const { isOpen } = useContext(ReplyModalContext);
   useEffect(() => {
     const fetchMessgaes = async () => {
       try {
@@ -27,9 +28,6 @@ const AdminMessages = () => {
     fetchMessgaes();
   }, []);
   async function updateStatus(action, id) {
-    if (action === "reply") {
-      setReplyModal();
-    }
     try {
       const res = await axios.patch(
         "http://localhost:5000/api/admin/contact/update",
@@ -65,14 +63,12 @@ const AdminMessages = () => {
   return (
     <AppLayout>
       <AdminLayout>
+        {isOpen && <ReplyModal />}
         {messages && (
-          <MessagesTable
-            messages={messages}
-            replyToMessage={updateStatus}
-            markAsRead={updateStatus}
-            archiveMessage={updateStatus}
+          <AdminMessagesContent
             deleteMessage={deleteMessage}
-            actions={actions}
+            updateStatus={updateStatus}
+            messages={messages}
           />
         )}
       </AdminLayout>

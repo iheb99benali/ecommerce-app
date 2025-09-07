@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import AdminImageSelector from "../components/AdminImageSelector";
 import { UserContext } from "../context/UserContext";
 import { CartContext } from "../context/CartContext";
+import AppLayout from "../components/AppLayout";
 
 const ProductView = () => {
   const token = localStorage.getItem("token");
@@ -75,45 +76,47 @@ const ProductView = () => {
   }
   return (
     product && (
-      <div className="product-view-page">
-        <div className="product-view-wrapper">
-          <div className="product-view-image">
-            <AdminImageSelector
-              activeImage={activeImage}
-              images={images}
-              setActiveImage={setActiveImage}
-            />
-          </div>
-
-          <div className="product-view-info">
-            <h1 className="product-view-title">{product.name}</h1>
-            <h2 className="product-view-price">{product.price}</h2>
-            {/*  */}
-            <div className="product-view-rating">
-              {[...Array(5)].map((_, i) => (
-                <i key={i} className="fa fa-star"></i>
-              ))}
-              <span>({product.reviews_count || 24} reviews)</span>
+      <AppLayout>
+        <div className="product-view-page">
+          <div className="product-view-wrapper">
+            <div className="product-view-image">
+              <AdminImageSelector
+                activeImage={activeImage}
+                images={images}
+                setActiveImage={setActiveImage}
+              />
             </div>
-            {/*  */}
-            <p className="product-view-description">{product.description}</p>
 
-            <div className="product-view-actions">
-              <div className="product-view-quantity">
-                <button onClick={handleDecrement}>-</button>
-                <span ref={qtyRef}>{quantity}</span>
-                <button onClick={handleIncrement}>+</button>
+            <div className="product-view-info">
+              <h1 className="product-view-title">{product.name}</h1>
+              <h2 className="product-view-price">{product.price}</h2>
+              {/*  */}
+              <div className="product-view-rating">
+                {[...Array(5)].map((_, i) => (
+                  <i key={i} className="fa fa-star"></i>
+                ))}
+                <span>({product.reviews_count || 24} reviews)</span>
               </div>
-              <button
-                className="product-view-addcart"
-                onClick={() => AddToCart(quantity)}
-              >
-                Add to Cart
-              </button>
+              {/*  */}
+              <p className="product-view-description">{product.description}</p>
+
+              <div className="product-view-actions">
+                <div className="product-view-quantity">
+                  <button onClick={handleDecrement}>-</button>
+                  <span ref={qtyRef}>{quantity}</span>
+                  <button onClick={handleIncrement}>+</button>
+                </div>
+                <button
+                  className="product-view-addcart"
+                  onClick={() => AddToCart(quantity)}
+                >
+                  Add to Cart
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </AppLayout>
     )
   );
 };

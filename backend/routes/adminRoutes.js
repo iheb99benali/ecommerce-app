@@ -12,6 +12,13 @@ const {
   deleteMessage,
   updateMessageStatus,
 } = require("../controllers/adminContactController");
+
+const {
+  getOrders,
+  deleteOrder,
+  updateOrderStatus,
+} = require("../controllers/adminOrderController");
+
 const {
   authenticateToken,
   verifyAdmin,
@@ -36,6 +43,16 @@ router.patch(
   authenticateToken,
   verifyAdmin,
   updateMessageStatus
+);
+
+//orders
+router.get("/orders", authenticateToken, verifyAdmin, getOrders);
+router.delete("/orders/delete", authenticateToken, verifyAdmin, deleteOrder);
+router.patch(
+  "/orders/update",
+  authenticateToken,
+  verifyAdmin,
+  updateOrderStatus
 );
 
 module.exports = router;

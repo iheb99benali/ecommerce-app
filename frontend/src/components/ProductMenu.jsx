@@ -2,7 +2,6 @@ import ProductCard from "./ProductCard";
 import SearchFilterSort from "./SearchFilterSort ";
 
 const ProductMenu = ({ productsList }) => {
-  console.log(productsList);
   return (
     <div className="latest-products">
       <div className="container">
